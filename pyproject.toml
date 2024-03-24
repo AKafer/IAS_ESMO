@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "ias-esmo"
+version = "0.1.0"
+description = "api for midicine reports"
+authors = ["Sergei Storozhuk <s_storozhuk@wargaming.com>"]
+license = "mit"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.5"
+django = "^5.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
