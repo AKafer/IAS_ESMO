@@ -122,3 +122,30 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_async_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_async_redis.client.DefaultClient",
+#             "IGNORE_EXCEPTIONS": True,
+#         }
+#     }
+# }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+
+
+EXAM_TTL = 60 * 60 * 24
+EMPL_TTL = 60 * 60
+
+ALLOWED_RETRIES = 3
+BACKOFF_SECONDS = 0.2
+
+ROWS_PER_PAGE = 200
