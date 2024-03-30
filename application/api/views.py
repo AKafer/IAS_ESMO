@@ -1,11 +1,11 @@
+import json
 from datetime import datetime
 
-import httpx
 from django.http import HttpRequest, HttpResponse
 from django.views import View
 import logging
 
-from externals.esmo import gest_client
+from externals.esmo import esmo_client
 
 logger = logging.getLogger("esmo")
 
@@ -27,17 +27,8 @@ class IndexView(View):
 
 class ApiView(View):
     async def get(self, request: HttpRequest):
-        # async with httpx.AsyncClient(verify=False) as client:
-        #     response = await client.request(
-        #         method='GET',
-        #         url=URL,
-        #         headers=HEADERS,
-        #     )
-        #     print('1')
-        #     # pars_response = await _deserialize_response(response)
-        from_date = datetime(2024, 3, 18)
-        to_date = datetime(2024, 3, 19)
-        result = await gest_client.get_examsessions(from_date, to_date)
-
-        print(f"LEN: {len(result)}")
-        return HttpResponse(f"LEN: {len(result)}")
+        from_date = datetime(2024, 3, 18, 0, 0, 0)
+        to_date = datetime(2024, 3, 18, 23, 59, 59)
+        result = await esmo_client.get_examsessions(from_date, to_date)
+        converted_result = json.dumps(result, default=str)
+        return HttpResponse(converted_result, content_type="application/json")
