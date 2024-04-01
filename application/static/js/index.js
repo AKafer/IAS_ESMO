@@ -1,9 +1,11 @@
 $(document).ready(function () {
   let table;
+  const date_test = $("#date_test");
+  const date_input = $("#date_input");
 
-  function create_table() {
+  function create_table(url) {
     console.log("***Table***");
-    const url = "api/?date=2024-03-20";
+    // const url = "api/?date=2024-03-20";
     console.log(url);
     table = $("#SP_Table").DataTable({
       ajax: {
@@ -30,8 +32,17 @@ $(document).ready(function () {
 
 
 
-  $("#FileButton").on("click", function () {
-      create_table();
+  $("#TableButton").on("click", function () {
+      console.log(date_test.val());
+      date_input.val('ЖОПАКАКАЯТО');
+      console.log(date_input.val());
+      $("#data-input").val($("#data-test").val());
+      if (table) {
+        const url = "api/?date=2024-03-20";
+        table.ajax.url(url).load();
+      } else {
+        create_table("api/?date=2024-03-20");
+      }
 
 
   //   const selectedFile = document.querySelector("#input_csv").files[0];

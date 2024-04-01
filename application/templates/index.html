@@ -34,29 +34,38 @@
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Decathlon</h4>
+          <h4 class="modal-title">ЭСМО испытания</h4>
         </div>
+
         <div class="col-4">
           <div id="date">
-            <div class="input-group input-group-sm mb-3">
-              <label class="input-group-text" id="name_input_file"
-                >Choose file</label
-              >
-              <input
-                class="form-control"
-                type="file"
-                name="files"
-                id="input_csv"
-                required
-                multiple
-              />
+            <div id="test_date">
+                <div class="input-group">
+                    <label class="input-group-text">Датa</label>
+                    <input type="date" pattern="\d{4}-\d{2}-\d{2}">
+<!--                    <div id="data_test" class="invalid-feedback">-->
+<!--                        Дата ипытания должна быть в диапазоне: от даты отправки материала на испытание до декущей даты.-->
+                    </div>
+                </div>
             </div>
+            <p></p>
+            <button type="button" class="btn btn-primary" id="TableButton">
+              ОБНОВИТЬ ТАБЛИЦУ
+            </button>
+
             <button type="button" class="btn btn-primary" id="FileButton">
-              DOWNLOAD JSON
+              СКАЧАТЬ ФАЙЛ
             </button>
           </div>
 
           <p></p>
+        </div>
+
+        <div id="SrokSlGod">
+          <div class="input-group input-group-sm mb-3">
+              <label class="input-group-text">Таблица для даты:</label>
+              <input class="form-control form-control-sm" id="date-input" type="text">
+          </div>
         </div>
 
         <div class="modal-body">
