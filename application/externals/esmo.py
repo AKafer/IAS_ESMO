@@ -47,12 +47,14 @@ class EsmoApiClient(BaseApiClient):
         to_date = datetime.strptime(to_date_str, '%Y-%m-%d %H:%M:%S')
         return from_date, to_date
 
-    async def get_examsessions(self, date: str):
-        cache_pattern = "esmo_examsessions: {date}"
-        cache_key = cache_pattern.format(date=date)
-        response_lst = cache.get(cache_key)
-        if not response_lst:
-            from_date, to_date = self._get_date_range(date)
+    async def get_examsessions(self, date_from_str: str, date_to_str: str):
+        cache_key = "dct_exams: {date_from_str}-{date_to_str}".format(
+            date_from_str=date_from_str, date_to_str=date_to_str
+        ).replace(":", "-")
+        result = cache.get(cache_key)
+        if not result:
+            from_date = datetime.strptime(date_from_str, '%Y-%m-%d %H:%M:%S')
+            to_date = datetime.strptime(date_to_str, '%Y-%m-%d %H:%M:%S')
             endpoint = (
                 f"exchange/examsessions/"
                 f"?from={int(from_date.timestamp())}"
@@ -60,9 +62,10 @@ class EsmoApiClient(BaseApiClient):
                 f"&per_page={settings.ROWS_PER_PAGE}"
             )
             result = await self._fetch_paginated(endpoint, 1)
-            employee_dict = await self.get_employees()
-            response_lst = exam_handler(result, employee_dict)
-            cache.set(cache_key, response_lst, settings.EXAM_TTL)
+            cache.set(cache_key, result, settings.EXAM_TTL)
+
+        employee_dict = await self.get_employees()
+        response_lst = exam_handler(result, employee_dict)
         return response_lst
 
 

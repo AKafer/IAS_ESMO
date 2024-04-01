@@ -15,11 +15,11 @@ $(document).ready(function () {
       columns: [
         { data: "number"},
         { data: "name" },
+        { data: "division_id" },
         { data: "type_1" },
-        { data: "date_type_1" },
         { data: "type_2"},
-        { data: "date_type_2"},
         { data: "duration"},
+        { data: "marks"}
       ],
       DisplayLength: 10,
       processing: true,
@@ -38,10 +38,10 @@ $(document).ready(function () {
       console.log(date_input.val());
       $("#data-input").val($("#data-test").val());
       if (table) {
-        const url = "api/?date=2024-03-20";
+        const url = "api/?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-23&time_to=10:00:00";
         table.ajax.url(url).load();
       } else {
-        create_table("api/?date=2024-03-20");
+        create_table("api//?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-23&time_to=10:00:00");
       }
 
 

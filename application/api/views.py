@@ -27,22 +27,32 @@ class IndexView(View):
 
 class ApiTableView(View):
     async def get(self, request: HttpRequest):
-        date = request.GET.get('date', '')
-        if not date:
+        date_from = request.GET.get('date_from', '')
+        time_from = request.GET.get('time_from', '')
+        date_to = request.GET.get('date_to', '')
+        time_to = request.GET.get('time_to', '')
+        if not date_from or not date_to:
             return HttpResponse('Date is not provided', status=400)
-        result = await esmo_client.get_examsessions(date)
+        date_from = f'{date_from} {time_from}'
+        date_to = f'{date_to} {time_to}'
+        result = await esmo_client.get_examsessions(date_from, date_to)
         converted_result = json.dumps(result, default=str)
         return HttpResponse(converted_result, content_type="application/json")
 
 
 class ApiFileView(View):
     async def get(self, request: HttpRequest):
-        date = request.GET.get('date', '')
-        if not date:
+        date_from = request.GET.get('date_from', '')
+        time_from = request.GET.get('time_from', '')
+        date_to = request.GET.get('date_to', '')
+        time_to = request.GET.get('time_to', '')
+        if not date_from or not date_to:
             return HttpResponse('Date is not provided', status=400)
-        result = await esmo_client.get_examsessions(date)
+        date_from = f'{date_from} {time_from}'
+        date_to = f'{date_to} {time_to}'
+        result = await esmo_client.get_examsessions(date_from, date_to)
         wb = await get_book(result)
         response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="Exams_data_{date}.xlsx"'.format(date=date)
+        response['Content-Disposition'] = 'attachment; filename="Exams_data_{date}.xlsx"'.format(date=date_from)
         wb.save(response)
         return response

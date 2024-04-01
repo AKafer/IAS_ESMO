@@ -123,8 +123,8 @@ CACHES = {
 }
 
 
-EXAM_TTL = 60 * 60  # 1 hour
-EMPL_TTL = 60 * 60  # 1 hour
+EXAM_TTL = 60 * 60  # 2 hour
+EMPL_TTL = 60 * 60  # 2 hour
 
 ALLOWED_RETRIES = 3
 BACKOFF_SECONDS = 0.2

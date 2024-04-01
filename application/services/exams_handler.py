@@ -20,30 +20,30 @@ def get_empl_dict(employees: list[dict]) -> dict:
 def exam_handler(exam_list: list[dict], employee_dict: dict) -> list[dict]:
     res = {}
     for exam in exam_list:
-        if exam["employee_uuid"] not in res:
-            res[exam["employee_uuid"]] = {
-                "number": exam["employee_uuid"],
-                "name": "Не найдено",
-                "type_1": '',
-                "date_type_1": None,
-                "type_2": '',
-                "date_type_2": None,
-                "duration": "00 ч., 00 м.",
-            }
-        if exam["type"] == 1:
-            res[exam["employee_uuid"]]["type_1"] = 'X'
-            res[exam["employee_uuid"]]["date_type_1"] = datetime.fromtimestamp(exam["date"])
-        if exam["type"] == 2:
-            res[exam["employee_uuid"]]["type_2"] = 'X'
-            res[exam["employee_uuid"]]["date_type_2"] = datetime.fromtimestamp(exam["date"])
-        if (
-            res[exam["employee_uuid"]]["type_1"]
-            and res[exam["employee_uuid"]]["type_2"]
-            and res[exam["employee_uuid"]]["date_type_1"] < res[exam["employee_uuid"]]["date_type_2"]
-        ):
-            diff = res[exam["employee_uuid"]]["date_type_2"] - res[exam["employee_uuid"]]["date_type_1"]
-            res[exam["employee_uuid"]]["duration"] = get_time(diff)
+        if exam["employee_uuid"] and exam["model"] == 1:
+            if exam["employee_uuid"] not in res:
+                res[exam["employee_uuid"]] = {
+                    "number": exam["employee_uuid"],
+                    "name": "Не найдено",
+                    "division_id": "Не найдено",
+                    "type_1": [],
+                    "type_2": [],
+                    "duration": "00 ч., 00 м.",
+                    "marks": "0-0"
+                }
+            if exam["type"] == 1:
+                res[exam["employee_uuid"]]["type_1"].append(datetime.fromtimestamp(exam["date"]))
+            if exam["type"] == 2:
+                res[exam["employee_uuid"]]["type_2"].append(datetime.fromtimestamp(exam["date"]))
+
+    for uuid, val in res.items():
+        type_1 = sorted(val["type_1"])
+        type_2 = sorted(val["type_2"])
+        res[uuid]["marks"] = f"{len(type_1)}-{len(type_2)}"
+        val["type_1"] = type_1
+        val["type_2"] = type_2
     for uuid, val in res.items():
         res[uuid]["name"] = employee_dict.get(uuid, {}).get("full_name", "Не найдено")
+        res[uuid]["division_id"] = employee_dict.get(uuid, {}).get("division_id", "Не найдено")
     res_list = list(res.values())
     return res_list
