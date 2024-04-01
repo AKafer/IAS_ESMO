@@ -8,7 +8,7 @@ def get_empl_dict(employees: list[dict]) -> dict:
     return {empl["uuid"]: empl for empl in employees}
 
 
-def exam_handler(exam_list: list[dict], employees: list[dict]) -> dict:
+def exam_handler(exam_list: list[dict], employee_dict: dict) -> dict:
     res = {}
     for exam in exam_list:
         if exam["employee_uuid"] not in res:
@@ -30,7 +30,6 @@ def exam_handler(exam_list: list[dict], employees: list[dict]) -> dict:
         if res[exam["employee_uuid"]]["type_1"] and res[exam["employee_uuid"]]["type_2"]:
             diff = res[exam["employee_uuid"]]["date_type_2"] - res[exam["employee_uuid"]]["date_type_1"]
             res[exam["employee_uuid"]]["duration"] = get_time(diff)
-    empl_dict = get_empl_dict(employees)
     for uuid, val in res.items():
-        res[uuid]["name"] = empl_dict.get(uuid, {}).get("full_name", "Не найдено")
+        res[uuid]["name"] = employee_dict.get(uuid, {}).get("full_name", "Не найдено")
     return res
