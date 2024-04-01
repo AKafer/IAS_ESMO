@@ -1,3 +1,4 @@
+from datetime import datetime
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -29,11 +30,29 @@ class EsmoApiClient(BaseApiClient):
             results.extend(next_results)
         return results
 
-    async def get_examsessions(self, from_date, to_date):
-        cache_pattern = "esmo_examsessions_{from_date}"
-        cache_key = cache_pattern.format(from_date=from_date.strftime("%m/%d/%Y"))
-        result = cache.get(cache_key)
-        if not result:
+    async def get_employees(self):
+        cache_key = f"employees"
+        employee_dict = cache.get(cache_key)
+        if not employee_dict:
+            endpoint = f"/exchange/employees/?per_page={settings.ROWS_PER_PAGE}"
+            result = await self._fetch_paginated(endpoint, 1)
+            employee_dict = get_empl_dict(result)
+            cache.set(cache_key, employee_dict, settings.EMPL_TTL)
+        return employee_dict
+
+    def _get_date_range(self, date: str):
+        from_date_str = date + ' 00:00:00'
+        to_date_str = date + ' 23:59:59'
+        from_date = datetime.strptime(from_date_str, '%Y-%m-%d %H:%M:%S')
+        to_date = datetime.strptime(to_date_str, '%Y-%m-%d %H:%M:%S')
+        return from_date, to_date
+
+    async def get_examsessions(self, date: str):
+        cache_pattern = "esmo_examsessions: {date}"
+        cache_key = cache_pattern.format(date=date)
+        response_lst = cache.get(cache_key)
+        if not response_lst:
+            from_date, to_date = self._get_date_range(date)
             endpoint = (
                 f"exchange/examsessions/"
                 f"?from={int(from_date.timestamp())}"
@@ -42,19 +61,9 @@ class EsmoApiClient(BaseApiClient):
             )
             result = await self._fetch_paginated(endpoint, 1)
             employee_dict = await self.get_employees()
-            response_dct = exam_handler(result, employee_dict)
-            cache.set(cache_key, response_dct, settings.EXAM_TTL)
-        return response_dct
-
-    async def get_employees(self):
-        cache_key = f"employees"
-        result = cache.get(cache_key)
-        if not result:
-            endpoint = f"/exchange/employees/?per_page={settings.ROWS_PER_PAGE}"
-            result = await self._fetch_paginated(endpoint, 1)
-            employee_dict = get_empl_dict(result)
-            cache.set(cache_key, employee_dict, settings.EMPL_TTL)
-        return result
+            response_lst = exam_handler(result, employee_dict)
+            cache.set(cache_key, response_lst, settings.EXAM_TTL)
+        return response_lst
 
 
 esmo_client: EsmoApiClient = Proxy(EsmoApiClient)
