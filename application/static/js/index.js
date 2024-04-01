@@ -3,46 +3,59 @@ $(document).ready(function () {
   const date_test = $("#date_test");
   const date_input = $("#date_input");
 
-  function create_table(url) {
-    console.log("***Table***");
-    // const url = "api/?date=2024-03-20";
-    console.log(url);
-    table = $("#SP_Table").DataTable({
+  function create_table() {
+    const url = "api/?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-21&time_to=10:00:00";
+    table = $("#esmo_table").DataTable({
+      scrollX: true,
+      lengthMenu: [
+        [20, -1],
+        [20, "Все"],
+      ],
+      DisplayLength: -1,
+      paging: true,
+      order: [[3, "desc"]],
+      language: {
+        url: "static/plug-ins/9dcbecd42ad/i18n/Russian.json",
+      },
+      processing: true,
       ajax: {
         url: url,
         dataSrc: "",
       },
       columns: [
-        { data: "number"},
+        { data: "number" },
         { data: "name" },
         { data: "division_id" },
         { data: "type_1" },
-        { data: "type_2"},
-        { data: "duration"},
-        { data: "marks"}
+        { data: "type_2" },
+        { data: "duration" },
+        { data: "marks" },
       ],
-      DisplayLength: 10,
-      processing: true,
-      lengthMenu: [
-        [20, -1],
-        [20, "Все"],
-      ],
+    });
+
+
+    $("#esmo_table tbody").on("click", "tr", function () {
+      if ($(this).hasClass("selected")) {
+        $(this).removeClass("selected");
+      } else {
+        table.$("tr.selected").removeClass("selected");
+        $(this).addClass("selected");
+      }
     });
   }
 
+create_table();
 
-
-  $("#TableButton").on("click", function () {
-      console.log(date_test.val());
-      date_input.val('ЖОПАКАКАЯТО');
-      console.log(date_input.val());
-      $("#data-input").val($("#data-test").val());
-      if (table) {
-        const url = "api/?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-23&time_to=10:00:00";
-        table.ajax.url(url).load();
-      } else {
-        create_table("api//?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-23&time_to=10:00:00");
-      }
+  // $("#TableButton").on("click", function () {
+  //     console.log(date_test.val());
+  //     console.log(date_input.val());
+  //     $("#data-input").val($("#data-test").val());
+  //     const url = "api/?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-21&time_to=10:00:00";
+  //     if (table) {
+  //       table.ajax.url(url).load();
+  //     } else {
+  //       create_table();
+  //     }
 
 
   //   const selectedFile = document.querySelector("#input_csv").files[0];
@@ -100,5 +113,5 @@ $(document).ready(function () {
   //       console.log(JSON.stringify(errMsg));
   //     },
   //   });
-  });
+//   });
 });
