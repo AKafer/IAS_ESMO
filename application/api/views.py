@@ -6,7 +6,7 @@ from django.views import View
 import logging
 
 from externals.esmo import esmo_client
-from services.exams_handler import get_book
+from services.book_handler import get_book
 
 logger = logging.getLogger("esmo")
 
