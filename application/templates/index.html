@@ -41,11 +41,13 @@
           <div id="date">
             <div id="test_date">
                 <div class="input-group">
-                    <label class="input-group-text">Датa</label>
-                    <input type="date" pattern="\d{4}-\d{2}-\d{2}">
-<!--                    <div id="data_test" class="invalid-feedback">-->
-<!--                        Дата ипытания должна быть в диапазоне: от даты отправки материала на испытание до декущей даты.-->
-<!--                    </div>-->
+                    <label class="input-group-text">Начальные датa и время</label>
+                    <input class="form-control-sm" type="date" id="input_date">
+                    <input class="form-control-sm" type="time" id="input_time">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-text">Интервал (0-36 ч.)</label>
+                    <input class="form-control-sm" type="number" id="input_interval" min=0 max=36>
                 </div>
             </div>
             <p></p>
@@ -64,7 +66,7 @@
         <div id="SrokSlGod">
           <div class="input-group input-group-sm mb-3">
               <label class="input-group-text">Таблица для даты:</label>
-              <input class="form-control form-control-sm" id="date-input" type="text">
+              <input class="form-control form-control-sm" id="input_text" type="text">
           </div>
         </div>
 
@@ -78,7 +80,7 @@
               <tr>
                 <th scope="col">number</th>
                 <th scope="col">name</th>
-                <th scope="col">division_id</th>
+                <th scope="col">division</th>
                 <th scope="col">type_1</th>
                 <th scope="col">type_2</th>
                 <th scope="col">duration</th>

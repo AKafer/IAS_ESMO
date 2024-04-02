@@ -1,10 +1,12 @@
 $(document).ready(function () {
   let table;
-  const date_test = $("#date_test");
-  const date_input = $("#date_input");
+  const input_date = $("#input_date");
+  const input_time = $("#input_time");
+  const input_interval = $("#input_interval");
+  const input_text = $("#input_text");
 
   function create_table() {
-    const url = "api/?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-21&time_to=10:00:00";
+    const url = "api/?date=2024-03-20&time=00:00&interval=0";
     table = $("#esmo_table").DataTable({
       scrollX: true,
       lengthMenu: [
@@ -25,11 +27,11 @@ $(document).ready(function () {
       columns: [
         { data: "number" },
         { data: "name" },
-        { data: "division_id" },
-        { data: "type_1" },
-        { data: "type_2" },
-        { data: "duration" },
-        { data: "marks" },
+        { data: "division" },
+        { data: "type_1[</br>]" },
+        { data: "type_2[</br>]" },
+        { data: "duration[</br>]" },
+        { data: "marks", visible: false },
       ],
     });
 
@@ -46,16 +48,17 @@ $(document).ready(function () {
 
 create_table();
 
-  // $("#TableButton").on("click", function () {
-  //     console.log(date_test.val());
-  //     console.log(date_input.val());
-  //     $("#data-input").val($("#data-test").val());
-  //     const url = "api/?date_from=2024-03-20&time_from=10:00:00&date_to=2024-03-21&time_to=10:00:00";
-  //     if (table) {
-  //       table.ajax.url(url).load();
-  //     } else {
-  //       create_table();
-  //     }
+  $("#TableButton").on("click", function () {
+      console.log(input_date.val());
+      console.log(input_time.val());
+      console.log(input_interval.val());
+      input_text.val(`Дата: ${input_date.val()} Время: ${input_time.val()} Интервал: ${input_interval.val()}`);
+      const url = `api/?date=${input_date.val()}&time=${input_time.val()}&interval=${input_interval.val()}`;
+      if (table) {
+        table.ajax.url(url).load();
+      } else {
+        create_table();
+      }
 
 
   //   const selectedFile = document.querySelector("#input_csv").files[0];
@@ -113,5 +116,5 @@ create_table();
   //       console.log(JSON.stringify(errMsg));
   //     },
   //   });
-//   });
+  });
 });

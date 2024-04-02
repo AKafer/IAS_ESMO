@@ -27,15 +27,12 @@ class IndexView(View):
 
 class ApiTableView(View):
     async def get(self, request: HttpRequest):
-        date_from = request.GET.get('date_from', '')
-        time_from = request.GET.get('time_from', '')
-        date_to = request.GET.get('date_to', '')
-        time_to = request.GET.get('time_to', '')
-        if not date_from or not date_to:
-            return HttpResponse('Date is not provided', status=400)
-        date_from = f'{date_from} {time_from}'
-        date_to = f'{date_to} {time_to}'
-        result = await esmo_client.get_examsessions(date_from, date_to)
+        date = request.GET.get('date', '')
+        time = request.GET.get('time', '')
+        interval = request.GET.get('interval', '')
+        if not date or not time or not interval:
+            return HttpResponse('Time params is not provided', status=400)
+        result = await esmo_client.get_examsessions(date, time, interval)
         converted_result = json.dumps(result, default=str)
         return HttpResponse(converted_result, content_type="application/json")
 
