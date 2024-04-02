@@ -36,6 +36,7 @@ $(document).ready(function () {
     });
 
 
+
     $("#esmo_table tbody").on("click", "tr", function () {
       if ($(this).hasClass("selected")) {
         $(this).removeClass("selected");
@@ -44,6 +45,7 @@ $(document).ready(function () {
         $(this).addClass("selected");
       }
     });
+
   }
 
 create_table();
