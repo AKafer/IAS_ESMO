@@ -27,6 +27,7 @@ class IndexView(View):
 
 class ApiTableView(View):
     async def get(self, request: HttpRequest):
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
         date = request.GET.get('date', '')
         time = request.GET.get('time', '')
         interval = request.GET.get('interval', '')
