@@ -6,7 +6,7 @@ $(document).ready(function () {
   const input_text = $("#input_text");
 
   function create_table() {
-    const url = "api/?date=2024-03-20&time=00:00&interval=0";
+    const url = "empty/";
     table = $("#esmo_table").DataTable({
       scrollX: true,
       lengthMenu: [

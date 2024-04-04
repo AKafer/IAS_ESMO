@@ -1,0 +1,41 @@
+{% load static %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+      </div>
+    </div>
+        {% if user.is_authenticated %}
+        <div class="card">
+          <div class="card-body">
+            <span>
+              <strong>
+                  Дата: {% now 'd.m.Y' %}
+                  <div class="vr"></div>
+                  {% if user.username %}
+                  Пользователь: {{ user.username }}
+                  {% else %}
+                  Пользователь: Гость
+                  {% endif %}
+                  <div class="vr"></div>
+              </strong>
+          </span>
+          </div>
+        </div>
+        {% endif %}
+        <!--Вывод информации о статусе журналов-->
+        <ul class="list-group mb-2" id="tasks"></ul>
+        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-primary btn-sm" type="submit" id="ExitSystemButton">Выйти из системы</button>
+            </form>
+<!--                <a type="button" class="btn btn-primary btn-sm" href="{% url 'users:logout' %}" id="ExitSystemButton">Выйти из системы</a>-->
+            {% else %}
+                <a type="button" class="btn btn-primary btn-sm" href="{% url 'users:login' %}">Войти в систему</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+</header>

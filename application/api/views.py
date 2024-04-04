@@ -1,7 +1,10 @@
 import json
 
+from asgiref.sync import sync_to_async, async_to_sync
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views import View
 import logging
 
@@ -21,13 +24,16 @@ HEADERS = {
 
 
 class IndexView(View):
+
+    @sync_to_async
+    @method_decorator(login_required)
+    @async_to_sync
     async def get(self, request: HttpRequest) -> HttpResponse:
-        return render(request, 'index.html')
+        return render(request, 'esmo/index.html')
 
 
 class ApiTableView(View):
     async def get(self, request: HttpRequest):
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
         date = request.GET.get('date', '')
         time = request.GET.get('time', '')
         interval = request.GET.get('interval', '')
@@ -36,6 +42,22 @@ class ApiTableView(View):
         result = await esmo_client.get_examsessions(date, time, interval)
         converted_result = json.dumps(result, default=str)
         return HttpResponse(converted_result, content_type="application/json")
+
+
+class ApiEmptyView(View):
+    async def get(self, request: HttpRequest):
+        example_result = [
+            {
+                'number': '123456',
+                'name': 'Иванова И.И.',
+                'division': 'Отделение №1',
+                'type_1': ['1912-04-14 23:39'],
+                'type_2': ['1912-04-14 02:20'],
+                'duration': ['02 ч., 41 м.'],
+                'marks': '1-1'
+            }
+        ]
+        return HttpResponse(json.dumps(example_result), content_type="application/json")
 
 
 class ApiFileView(View):

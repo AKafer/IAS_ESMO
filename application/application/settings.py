@@ -22,7 +22,6 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'users',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +135,8 @@ CACHES = {
     }
 }
 
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'index'
 
 EXAM_TTL = 60 * 60  # 2 hour
 EMPL_TTL = 60 * 60  # 2 hour
@@ -144,5 +146,4 @@ BACKOFF_SECONDS = 0.2
 
 ROWS_PER_PAGE = 200
 
-TOKEN = os.getenv('TOKEN', default='aaa')
-print(DEBUG)
+TOKEN = os.getenv('TOKEN', default='')
