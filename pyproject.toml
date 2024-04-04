@@ -17,6 +17,7 @@ redis = "^5.0.3"
 openpyxl = "^3.1.2"
 gunicorn = "^21.2.0"
 python-dotenv = "^1.0.1"
+psycopg2 = "^2.9.9"
 
 
 [build-system]
