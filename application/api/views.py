@@ -52,17 +52,9 @@ class ApiEmptyView(View):
 
 class ApiFileView(View):
     async def get(self, request: HttpRequest):
-        date_from = request.GET.get('date_from', '')
-        time_from = request.GET.get('time_from', '')
-        date_to = request.GET.get('date_to', '')
-        time_to = request.GET.get('time_to', '')
-        if not date_from or not date_to:
-            return HttpResponse('Date is not provided', status=400)
-        date_from = f'{date_from} {time_from}'
-        date_to = f'{date_to} {time_to}'
-        result = await esmo_client.get_examsessions(date_from, date_to)
+        result = await esmo_client.get_last_examsessions_from_cache()
         wb = await get_book(result)
         response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="Exams_data_{date}.xlsx"'.format(date=date_from)
+        response['Content-Disposition'] = 'attachment; filename="Exams_data.xlsx"'.format(date='')
         wb.save(response)
         return response

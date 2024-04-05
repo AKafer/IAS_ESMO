@@ -8,6 +8,7 @@ from lazy_object_proxy import Proxy
 from services.exams_handler import exam_handler, get_empl_dict, get_div_dict
 from externals.base import BaseApiClient
 
+LAST_EXAM_CACHE_KEY = 'last_exam_cache_key'
 
 class EsmoApiClient(BaseApiClient):
     base_url = 'https://profaudit.kvzrm.ru/api/v1/'
@@ -56,13 +57,11 @@ class EsmoApiClient(BaseApiClient):
         return from_date, to_date
 
     async def get_examsessions(self, date: str, time: str, interval: str):
-        print('ESMO')
-        cache_key = "dct_exams_{date}-{time}-{interval}".format(
+        cache_key = "exams_dct_{date}-{time}-{interval}".format(
             date=date, time=time, interval=interval
         ).replace(":", "-")
-        result = cache.get(cache_key)
-        print('CACHE')
-        if not result:
+        response_lst = cache.get(cache_key)
+        if not response_lst:
             from_date = datetime.strptime(f"{date} {time}", '%Y-%m-%d %H:%M')
             to_date = from_date + timedelta(hours=int(interval))
             endpoint = (
@@ -72,12 +71,21 @@ class EsmoApiClient(BaseApiClient):
                 f"&per_page={settings.ROWS_PER_PAGE}"
             )
             result = await self._fetch_paginated(endpoint, 1)
-            cache.set(cache_key, result, settings.EXAM_TTL)
-
-        employee_dict = await self.get_employees()
-        divisions_dict = await self.get_divisions()
-        response_lst = exam_handler(result, employee_dict, divisions_dict)
+            employee_dict = await self.get_employees()
+            divisions_dict = await self.get_divisions()
+            response_lst = exam_handler(result, employee_dict, divisions_dict)
+            cache.set(cache_key, response_lst, settings.EXAM_TTL)
+            cache.set(LAST_EXAM_CACHE_KEY, cache_key, settings.EXAM_TTL)
         return response_lst
+
+    async def get_last_examsessions_from_cache(self):
+        last_exam_cache_key = cache.get(LAST_EXAM_CACHE_KEY)
+        if not last_exam_cache_key:
+            return
+        result = cache.get(last_exam_cache_key)
+        if not result:
+            return
+        return result
 
 
 esmo_client: EsmoApiClient = Proxy(EsmoApiClient)

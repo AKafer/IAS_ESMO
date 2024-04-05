@@ -7,5 +7,5 @@ urlpatterns = [
     re_path(r'^$', IndexView.as_view(), name='index'),
     re_path(r'^empty/', ApiEmptyView.as_view()),
     re_path(r'^api/', ApiTableView.as_view()),
-    re_path(r'^file/', ApiFileView.as_view()),
+    re_path(r'^file/', ApiFileView.as_view(), name='file'),
 ]
