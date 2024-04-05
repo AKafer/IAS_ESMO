@@ -5,35 +5,35 @@
 {% block content %}
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">ЭСМО испытания</h4>
-      </div>
 
-      <div class="col-4">
+      <div class="col-12">
         <div id="date">
           <div id="test_date">
               <div class="input-group">
                   <label class="input-group-text">Начальные датa и время</label>
-                  <input class="form-control-sm" type="date" id="input_date">
-                  <input class="form-control-sm" type="time" id="input_time">
+                  <input class="form-control-sm" type="date" id="input_date" >
+                  <input class="form-control-sm" type="time" id="input_time" value="00:00">
                   <label class="input-group-text">Интервал (0-36 ч.)</label>
-                  <input class="form-control-sm" type="number" id="input_interval" min=0 max=36>
+                  <input class="form-control-sm" type="number" id="input_interval" min=0 max=36 value=24>
               </div>
           </div>
-          <p></p>
-          <button type="button" class="btn btn-primary" id="TableButton">
-            ОБНОВИТЬ ТАБЛИЦУ
-          </button>
+          <div class="card">
+             <div class="card-body">
+                <button type="button" class="btn btn-primary" id="TableButton">
+                  ЗАГРУЗИТЬ ДАННЫЕ
+                </button>
 
-          <button type="button" class="btn btn-primary" id="FileButton">
-            СКАЧАТЬ ФАЙЛ
-          </button>
+                <button type="button" class="btn btn-primary" id="FileButton">
+                  СКАЧАТЬ В ФАЙЛ
+                </button>
+             </div>
+          </div>
         </div>
 
         <p></p>
       </div>
 
-      <div id="SrokSlGod">
+      <div id="Params">
         <div class="input-group input-group-sm mb-3">
             <label class="input-group-text">Параметры запроса:</label>
             <input class="form-control form-control-sm" id="input_text" type="text">

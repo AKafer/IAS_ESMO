@@ -1,7 +1,7 @@
 {
 	"sProcessing":   "Подождите...",
 	"sLengthMenu":   "Отобразить _MENU_",
-	"sZeroRecords":  "Нет записей",
+	"sZeroRecords":  "Данные не загружены",
 	"sInfo":         "Строк с _START_ до _END_ из _TOTAL_",
 	"sInfoEmpty":    "Строк с 0 до 0 из 0",
 	"sInfoFiltered": "(отфильтровано из _MAX_ строк.)",

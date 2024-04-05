@@ -1,10 +1,12 @@
 {% load static %}
 <nav class="navbar navbar-light bg-light">
-    <div class="container-fluid">
-      <div class="card">
-        <div class="card-body">
+    <div class="container-fluid" style="background-color: #19a2a2">
+      <div class="card" style="margin: 10px;">
+        <a  href="{% url 'index' %}">
+            <img src="{% static 'images/esmo-logo.png' %}" alt="Эсмо" width="70%" height="70%" >
+        </a>
       </div>
-    </div>
+
         {% if user.is_authenticated %}
         <div class="card">
           <div class="card-body">
@@ -27,15 +29,13 @@
         <ul class="list-group mb-2" id="tasks"></ul>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
             {% if user.is_authenticated %}
-            <form method="post" action="{% url 'users:logout' %}">
-                {% csrf_token %}
-                <button class="btn btn-primary btn-sm" type="submit" id="ExitSystemButton">Выйти из системы</button>
-            </form>
-<!--                <a type="button" class="btn btn-primary btn-sm" href="{% url 'users:logout' %}" id="ExitSystemButton">Выйти из системы</a>-->
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-sm" type="submit" id="ExitSystemButton">Выйти из системы</button>
+                </form>
             {% else %}
                 <a type="button" class="btn btn-primary btn-sm" href="{% url 'users:login' %}">Войти в систему</a>
             {% endif %}
         </div>
     </div>
 </nav>
-</header>

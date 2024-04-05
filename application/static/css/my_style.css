@@ -13,3 +13,7 @@ body {
     font-size: 25px;
     background-color: #FAEEDD;
   }
+
+  .example {
+    background-color: green;
+  }

@@ -46,17 +46,7 @@ class ApiTableView(View):
 
 class ApiEmptyView(View):
     async def get(self, request: HttpRequest):
-        example_result = [
-            {
-                'number': '123456',
-                'name': 'Иванова И.И.',
-                'division': 'Отделение №1',
-                'type_1': ['1912-04-14 23:39'],
-                'type_2': ['1912-04-14 02:20'],
-                'duration': ['02 ч., 41 м.'],
-                'marks': '1-1'
-            }
-        ]
+        example_result = []
         return HttpResponse(json.dumps(example_result), content_type="application/json")
 
 

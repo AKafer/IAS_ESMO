@@ -5,6 +5,19 @@ $(document).ready(function () {
   const input_interval = $("#input_interval");
   const input_text = $("#input_text");
 
+  let now = new Date();
+  let day = now.getDate();
+  let day_of_week = now.getDay();
+  let diff = 1;
+  if (day_of_week === 7) {
+    diff = 2;
+  } else if (day_of_week === 1) {
+    diff = 3;
+  }
+  now.setDate(day - diff);
+  input_date.val(now.toISOString().slice(0, 10));
+
+
   function create_table() {
     const url = "empty/";
     table = $("#esmo_table").DataTable({
