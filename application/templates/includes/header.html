@@ -1,5 +1,6 @@
 {% load static %}
 <nav class="navbar navbar-light bg-light">
+    {% csrf_token %}
     <div class="container-fluid" style="background-color: #19a2a2">
       <div class="card" style="margin: 10px;">
         <a  href="{% url 'api:index' %}">
@@ -25,7 +26,8 @@
         {% endif %}
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'users:logout' %}">
+            {% csrf_token %}
+            <form method="post" action="{% url 'users:logout' %}">
                     {% csrf_token %}
                     <button class="btn btn-primary btn-sm" type="submit" id="ExitSystemButton">Выйти из системы</button>
                 </form>
