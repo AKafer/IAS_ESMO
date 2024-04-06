@@ -1,5 +1,6 @@
 {% load static %}
 <nav class="navbar navbar-light bg-light">
+    <meta name="csrf_token" content="{{ csrf_token }}">
     {% csrf_token %}
     <div class="container-fluid" style="background-color: #19a2a2">
       <div class="card" style="margin: 10px;">

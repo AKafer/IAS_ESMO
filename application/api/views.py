@@ -9,6 +9,8 @@ from django.utils.decorators import method_decorator
 from django.views import View
 import logging
 
+from django.views.decorators.csrf import csrf_exempt
+
 from externals.esmo import esmo_client
 from services.book_handler import get_book
 from services.common import get_div_name, extract_query_params_from_cache_key
@@ -20,12 +22,14 @@ logger = logging.getLogger("esmo")
 class IndexView(View):
     @sync_to_async
     @method_decorator(login_required)
+    @csrf_exempt
     @async_to_sync
     async def get(self, request: HttpRequest) -> HttpResponse:
         return render(request, 'esmo/index.html')
 
 
 class DivsView(View):
+    @csrf_exempt
     async def get(self, request: HttpRequest):
         result = await esmo_client.get_divisions()
         converted_result = json.dumps(list(result.values()), default=str)
@@ -33,6 +37,7 @@ class DivsView(View):
 
 
 class ExamsTableView(View):
+    @csrf_exempt
     async def get(self, request: HttpRequest):
         date = request.GET.get('date', '')
         time = request.GET.get('time', '')
@@ -46,12 +51,14 @@ class ExamsTableView(View):
 
 
 class ExamsEmptyView(View):
+    @csrf_exempt
     async def get(self, request: HttpRequest):
         example_result = []
         return HttpResponse(json.dumps(example_result), content_type="application/json")
 
 
 class ExamsFileView(View):
+    @csrf_exempt
     async def get(self, request: HttpRequest):
         user = await sync_to_async(auth.get_user)(request)
         username = user.username
