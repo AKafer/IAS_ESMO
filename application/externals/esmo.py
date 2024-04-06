@@ -8,7 +8,8 @@ from lazy_object_proxy import Proxy
 from services.exams_handler import exam_handler, get_empl_dict, get_div_dict
 from externals.base import BaseApiClient
 
-LAST_EXAM_CACHE_KEY = 'last_exam_cache_key'
+
+USER_LAST_EXAM_CACHE_KEY = "{username}_last_exam_cache_key"
 
 
 class EsmoApiClient(BaseApiClient):
@@ -65,7 +66,9 @@ class EsmoApiClient(BaseApiClient):
             interval = self.max_interval
         return interval
 
-    async def get_examsessions(self, date: str, time: str, interval: str, div: str = None) -> list:
+    async def get_examsessions(
+            self, username: str, date: str, time: str, interval: str, div: str = None
+    ) -> list:
         interval = self.check_interval(interval)
         cache_key = "exams_dct<>date={date}_time={time}_int={interval}_div={div}".format(
             date=date, time=time, interval=interval, div=div if div else "all"
@@ -87,11 +90,11 @@ class EsmoApiClient(BaseApiClient):
             divisions_dict = await self.get_divisions()
             response_lst = exam_handler(result, employee_dict, divisions_dict)
             cache.set(cache_key, response_lst, settings.EXAM_TTL)
-        cache.set(LAST_EXAM_CACHE_KEY, cache_key, settings.EXAM_TTL)
+        cache.set(USER_LAST_EXAM_CACHE_KEY.format(username=username), cache_key, settings.EXAM_TTL)
         return response_lst
 
-    async def get_last_examsessions_from_cache(self):
-        last_exam_cache_key = cache.get(LAST_EXAM_CACHE_KEY)
+    async def get_last_examsessions_from_cache(self, username: str):
+        last_exam_cache_key = cache.get(USER_LAST_EXAM_CACHE_KEY.format(username=username))
         if not last_exam_cache_key:
             return
         result = cache.get(last_exam_cache_key)

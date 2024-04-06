@@ -97,12 +97,10 @@ $(document).ready(function () {
          Подразделение: ${select_div.find(":selected").text()}`
     );
     let url = `/exams/?date=${input_date.val()}&time=${input_time.val()}&interval=${interval}`;
-    console.log(select_div.val());
     if (select_div.val() !== "0") {
       url += `&div=${select_div.val()}`;
     }
 
-    console.log(url);
     if (table) {
       table.ajax.url(url).load();
     } else {

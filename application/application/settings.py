@@ -101,7 +101,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1', 'http://0.0.0.0', 'http://localhost', 'http://80.87.200.48/']
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com', 'https://*.127.0.0.1', 'http://0.0.0.0', 'http://localhost', 'http://80.87.200.48/']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -153,6 +153,6 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # или 'DEBUG'
+        'level': 'INFO',
     },
 }
