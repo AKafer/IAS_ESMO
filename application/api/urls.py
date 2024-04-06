@@ -1,11 +1,12 @@
 from django.urls import re_path
-from .views import IndexView, ApiTableView, ApiFileView, ApiEmptyView
+from .views import ExamsTableView, ExamsFileView, ExamsEmptyView, DivsView, IndexView
 
 app_name = 'api'
 
 urlpatterns = [
     re_path(r'^$', IndexView.as_view(), name='index'),
-    re_path(r'^empty/', ApiEmptyView.as_view()),
-    re_path(r'^api/', ApiTableView.as_view()),
-    re_path(r'^file/', ApiFileView.as_view(), name='file'),
+    re_path(r'^empty/', ExamsEmptyView.as_view(), name='empty'),
+    re_path(r'^exams/', ExamsTableView.as_view(), name='exams'),
+    re_path(r'^api/file/', ExamsFileView.as_view(), name='file'),
+    re_path(r'^divs/', DivsView.as_view(), name='divs'),
 ]

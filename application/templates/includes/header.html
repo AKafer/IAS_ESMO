@@ -2,16 +2,15 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid" style="background-color: #19a2a2">
       <div class="card" style="margin: 10px;">
-        <a  href="{% url 'index' %}">
-            <img src="{% static 'images/esmo-logo.png' %}" alt="Эсмо" width="70%" height="70%" >
+        <a  href="{% url 'api:index' %}">
+            <img src="{% static 'images/ias_control_logo.png' %}" alt="IAS" width="100%" height="100%" >
         </a>
       </div>
-
         {% if user.is_authenticated %}
-        <div class="card">
-          <div class="card-body">
+        <div class="card border-info">
+          <div class="card-body " style="background-color: #19a2a2">
             <span>
-              <strong>
+              <strong style="color:white;">
                   Дата: {% now 'd.m.Y' %}
                   <div class="vr"></div>
                   {% if user.username %}
@@ -19,14 +18,11 @@
                   {% else %}
                   Пользователь: Гость
                   {% endif %}
-                  <div class="vr"></div>
               </strong>
           </span>
           </div>
         </div>
         {% endif %}
-        <!--Вывод информации о статусе журналов-->
-        <ul class="list-group mb-2" id="tasks"></ul>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'users:logout' %}">

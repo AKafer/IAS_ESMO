@@ -7,36 +7,36 @@
     <div class="modal-content">
 
       <div class="col-12">
-        <div id="date">
-          <div id="test_date">
-              <div class="input-group">
+        <div class="card text-center">
+          <div class="card-body text-center">
+              <div class="input-group text-center">
                   <label class="input-group-text">Начальные датa и время</label>
                   <input class="form-control-sm" type="date" id="input_date" >
                   <input class="form-control-sm" type="time" id="input_time" value="00:00">
-                  <label class="input-group-text">Интервал (0-36 ч.)</label>
-                  <input class="form-control-sm" type="number" id="input_interval" min=0 max=36 value=24>
+                  <label class="input-group-text">Интервал (0-48 ч.)</label>
+                  <input class="form-control-sm" type="number" id="input_interval" min=0 max=48 value=24>
+                  <label class="input-group-text">Подразделение</label>
+                  <select class="form-select-sm" id="select_div" name="client" ></select>
               </div>
           </div>
-          <div class="card">
-             <div class="card-body">
+          <div class="card" style="background-color: #19a2a2">
+             <div class="card-body text-center">
                 <button type="button" class="btn btn-primary" id="TableButton">
                   ЗАГРУЗИТЬ ДАННЫЕ
                 </button>
 
-                <a type="button" class="btn btn-primary" id="FileButton" href="{% url 'file' %}">
+                <a type="button" class="btn btn-primary" id="FileButton" href="{% url 'api:file' %}">
                   СКАЧАТЬ В ФАЙЛ
                 </a>
              </div>
           </div>
         </div>
-
-        <p></p>
       </div>
 
       <div id="Params">
-        <div class="input-group input-group-sm mb-3">
+        <div class="input-group">
             <label class="input-group-text">Параметры запроса:</label>
-            <input class="form-control form-control-sm" id="input_text" type="text">
+            <input class="form-control text-success" id="input_text" type="text">
         </div>
       </div>
 

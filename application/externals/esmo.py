@@ -10,7 +10,9 @@ from externals.base import BaseApiClient
 
 LAST_EXAM_CACHE_KEY = 'last_exam_cache_key'
 
+
 class EsmoApiClient(BaseApiClient):
+    max_interval = 48
     base_url = 'https://profaudit.kvzrm.ru/api/v1/'
     HEADERS = {
         'Authorization': f'Bearer {settings.TOKEN}',
@@ -56,9 +58,17 @@ class EsmoApiClient(BaseApiClient):
         to_date = datetime.strptime(to_date_str, '%Y-%m-%d %H:%M:%S')
         return from_date, to_date
 
-    async def get_examsessions(self, date: str, time: str, interval: str):
-        cache_key = "exams_dct_{date}-{time}-{interval}".format(
-            date=date, time=time, interval=interval
+    def check_interval(self, interval: str) -> str:
+        if int(interval) < 0:
+            interval = '0'
+        if int(interval) > self.max_interval:
+            interval = self.max_interval
+        return interval
+
+    async def get_examsessions(self, date: str, time: str, interval: str, div: str = None) -> list:
+        interval = self.check_interval(interval)
+        cache_key = "exams_dct<>date={date}_time={time}_int={interval}_div={div}".format(
+            date=date, time=time, interval=interval, div=div if div else "all"
         ).replace(":", "-")
         response_lst = cache.get(cache_key)
         if not response_lst:
@@ -70,12 +80,14 @@ class EsmoApiClient(BaseApiClient):
                 f"&to={int(to_date.timestamp())}"
                 f"&per_page={settings.ROWS_PER_PAGE}"
             )
+            if div:
+                endpoint += f"&division_id={div}"
             result = await self._fetch_paginated(endpoint, 1)
             employee_dict = await self.get_employees()
             divisions_dict = await self.get_divisions()
             response_lst = exam_handler(result, employee_dict, divisions_dict)
             cache.set(cache_key, response_lst, settings.EXAM_TTL)
-            cache.set(LAST_EXAM_CACHE_KEY, cache_key, settings.EXAM_TTL)
+        cache.set(LAST_EXAM_CACHE_KEY, cache_key, settings.EXAM_TTL)
         return response_lst
 
     async def get_last_examsessions_from_cache(self):

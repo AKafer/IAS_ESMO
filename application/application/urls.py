@@ -3,15 +3,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from api.urls import urlpatterns as api_routes
-
 urlpatterns = [
+    path("", include('api.urls', namespace='api')),
+    # path('api/', include('api.urls', namespace='api')),
     path('auth/', include('users.urls', namespace='users')),
     path('auth/', include('django.contrib.auth.urls')),
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
-
-urlpatterns.extend(api_routes)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
