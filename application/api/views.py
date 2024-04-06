@@ -1,6 +1,7 @@
 import json
 
 from asgiref.sync import sync_to_async, async_to_sync
+from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -37,7 +38,8 @@ class ExamsTableView(View):
         time = request.GET.get('time', '')
         interval = request.GET.get('interval', '')
         div = request.GET.get('div', '')
-        username = request.auser.username
+        user = await sync_to_async(auth.get_user)(request)
+        username = user.username
         result = await esmo_client.get_examsessions(username, date, time, interval, div)
         converted_result = json.dumps(result, default=str)
         return HttpResponse(converted_result, content_type="application/json")
@@ -51,9 +53,10 @@ class ExamsEmptyView(View):
 
 class ExamsFileView(View):
     async def get(self, request: HttpRequest):
-        username = request.user.username
+        user = await sync_to_async(auth.get_user)(request)
+        username = user.username
         date, time, interval, div = extract_query_params_from_cache_key(username)
-        result = await esmo_client.get_examsessions(date, time, interval, div, username)
+        result = await esmo_client.get_examsessions(username, date, time, interval, div)
         div_name = await get_div_name(div)
         wb = await get_book(result)
         response = HttpResponse(content_type='application/vnd.ms-excel')
