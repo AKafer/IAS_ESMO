@@ -10,11 +10,12 @@ $(document).ready(function () {
   let day = now.getDate();
   let day_of_week = now.getDay();
   let diff = 1;
-  if (day_of_week === 7) {
+  if (day_of_week === 0) {
     diff = 2;
   } else if (day_of_week === 1) {
     diff = 3;
   }
+  console.log(day, day_of_week, diff);
   now.setDate(day - diff);
   input_date.val(now.toISOString().slice(0, 10));
 

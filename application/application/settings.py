@@ -106,8 +106,10 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.127.0.0.1',
     'http://0.0.0.0',
     'http://localhost',
-    'http://80.87.200.48/',
-    'https://appname.herokuapp.com'
+    'http://80.87.200.48',
+    'https://appname.herokuapp.com',
+    'http://tests-monitor.sytes.net',
+    'https://tests-monitor.sytes.net'
 ]
 
 # Static files (CSS, JavaScript, Images)
