@@ -23,5 +23,3 @@ RUN cd /app && poetry config virtualenvs.create false && poetry install
 COPY application/ .
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 ENV PYTHONUNBUFFERED=TRUE
-
-CMD ["gunicorn", "application.wsgi:application", "--bind", "0.0.0.0:8000"]

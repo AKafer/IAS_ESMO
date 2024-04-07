@@ -29,13 +29,14 @@ services:
       - db
     env_file:
       - ./.env
+    command: gunicorn application.wsgi:application --bind 0.0.0.0:8000
 
   nginx:
     container_name: esmo_nginx
     image: nginx:latest
     restart: always
     ports:
-      - 80:80
+      - 8000:80
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - static_value:/var/html/static/
