@@ -281,6 +281,17 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "pytz"
+version = "2024.1"
+description = "World timezone definitions, modern and historical"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
+    {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
+]
+
+[[package]]
 name = "redis"
 version = "5.0.3"
 description = "Python client for Redis database and key-value store"
@@ -435,4 +446,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.5"
-content-hash = "a0885ff48fe11d3061e2580f092a61f7029e45b8d6f3f446c7eaa2136b5f2ba0"
+content-hash = "ef1e18e25c4ece242b7a13af5aa1943f6a5508ae165e11f45ba86166bd86002e"
