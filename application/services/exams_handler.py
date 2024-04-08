@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import pytz
 
 
 def get_time(diff: timedelta) -> str:
@@ -41,9 +42,9 @@ def exam_handler(
                     "marks": "0-0"
                 }
             if exam["type"] == 1:
-                res[exam["employee_uuid"]]["type_1"].append(datetime.fromtimestamp(exam["date"]))
+                res[exam["employee_uuid"]]["type_1"].append(datetime.fromtimestamp(exam["date"], pytz.timezone("Europe/Moscow")))
             if exam["type"] == 2:
-                res[exam["employee_uuid"]]["type_2"].append(datetime.fromtimestamp(exam["date"]))
+                res[exam["employee_uuid"]]["type_2"].append(datetime.fromtimestamp(exam["date"], pytz.timezone("Europe/Moscow")))
 
     for uuid, val in res.items():
         type_1 = sorted(val["type_1"])
