@@ -1,0 +1,2 @@
+class QueryParamsNotProvidedError(Exception):
+    pass

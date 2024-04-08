@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title_site }}{% endblock %}
+
+{% block content %}
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+
+      <div class="col-12">
+        <div class="card text-center">
+          <div class="card-body text-center">
+              <div class="input-group text-center">
+                  <label class="input-group-text">Начальные датa и время</label>
+                  <input class="form-control-sm" type="date" id="input_date" >
+                  <input class="form-control-sm" type="time" id="input_time" value="00:00">
+                  <label class="input-group-text">Интервал (0-48 ч.)</label>
+                  <input class="form-control-sm" type="number" id="input_interval" min=0 max=48 value=24>
+                  <label class="input-group-text">Подразделение</label>
+                  <select class="form-select-sm" id="select_div" name="client" ></select>
+              </div>
+          </div>
+          <div class="card" style="background-color: #19a2a2">
+             <div class="card-body text-center">
+                <button type="button" class="btn btn-primary" id="TableButton">
+                  ЗАГРУЗИТЬ ДАННЫЕ
+                </button>
+
+                <a type="button" class="btn btn-primary" id="FileButton" href="{% url 'api:file' %}">
+                  СКАЧАТЬ В ФАЙЛ
+                </a>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="Params">
+        <div class="input-group">
+            <label class="input-group-text">Параметры запроса:</label>
+            <input class="form-control text-success" id="input_text" type="text">
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <table
+          class="table table-bordered table-responsive table-striped table-hover"
+          id="esmo_table"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Номер</th>
+              <th scope="col">ФИО</th>
+              <th scope="col">Подразделение</th>
+              <th scope="col">Тест 1</th>
+              <th scope="col">Тест 2</th>
+              <th scope="col">Время работы</th>
+              <th scope="col">marks</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+{% endblock %}

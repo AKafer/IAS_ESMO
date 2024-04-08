@@ -1,34 +1,75 @@
 import json
-from datetime import datetime
 
+from asgiref.sync import sync_to_async, async_to_sync
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views import View
 import logging
 
+from django.views.decorators.csrf import csrf_exempt
+
 from externals.esmo import esmo_client
+from services.book_handler import get_book
+from services.common import get_div_name, extract_query_params_from_cache_key
+
 
 logger = logging.getLogger("esmo")
 
 
-URL = 'https://profaudit.kvzrm.ru/api/v1/exchange/examsessions/?per_page=100'
-TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjkwMGIyMTE0NWEzZjVjMDE0Nzg1MjdiZGQxN2RlOWIzZDNjOWZjOGEyODQ1OTk0NTI4ZGUzMjNjMmMzMjM4ZGRlM2M3ZTVmZmM3NTY3NWZjIn0.eyJhdWQiOiIxIiwianRpIjoiOTAwYjIxMTQ1YTNmNWMwMTQ3ODUyN2JkZDE3ZGU5YjNkM2M5ZmM4YTI4NDU5OTQ1MjhkZTMyM2MyYzMyMzhkZGUzYzdlNWZmYzc1Njc1ZmMiLCJpYXQiOjE3MTEyNzc5MjUsIm5iZiI6MTcxMTI3NzkyNSwiZXhwIjoxNzQyODEzOTI1LCJzdWIiOiIxNDAiLCJzY29wZXMiOltdfQ.LW3rw5VXrTsmYWKquAtkK_8UgOeifiji7t2N5Qf8LYx33JZN77-pDBH60zT_XFj0TXWQEwrg7eujFASZuYSybr7iBGhvnJF4fM5yiVvxDXRTBMBv6EY9jw-nFdyD9Qp-zUZRuQ1mfQkUWtEYOP0tuvV_VA3bUY2XAiJF61JagqlmRtpfbry-VPcbWFuZmtOmLq4IZe6x5mlgwLAme15ESTHs_Mq6IQrsF9nmSCXoCzORaKo6Eh_EnN21sSu_0cOmlR7yxQwUUlODs0i2KTVTQPDlesSZweqPUXGpR1pQyuUoG7u8rCNtOd2XZOAZt6zaUmjmeQyODCx5hyTKSdnliZtzc3qLVr2ZWgBm1pvI9hQm9E8JuerYAv--ls6xVIGLn3xS5YgeUIWgPAzCmH_vlukOh7pZ9YYd2TR8v8WyfNI4ISvZRkUOnF6EgFHfGJ7LIbtq69-MzXQnBoOZL2RbNUSFQeO0cCx4cehsePFBzf5o_dTEPqtO5UJmmJOMIvs7ElCUR1wtl6a-v62HbDQCqLuZv3rZO-Dyg1O2z2081fvKWH9LxpySyZFXtOMQTufqI2iysMGXTeiykw8IwQVh4jNF95TVE-3JlAbOkJoztN7CPpdYJNF0-UkU-8eYsZ7Ey7pdmwu7bJQCPu0rzH7lK0OANt5PO5Up7DNRmxIIJOM'
-
-HEADERS = {
-        'Authorization': f'Bearer {TOKEN}',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    }
-
-
 class IndexView(View):
+    @sync_to_async
+    @method_decorator(login_required)
+    @csrf_exempt
+    @async_to_sync
     async def get(self, request: HttpRequest) -> HttpResponse:
-        return HttpResponse("Welcome to Esmo Proxy app")
+        return render(request, 'esmo/index.html')
 
 
-class ApiView(View):
+class DivsView(View):
+    @csrf_exempt
     async def get(self, request: HttpRequest):
-        from_date = datetime(2024, 3, 18, 0, 0, 0)
-        to_date = datetime(2024, 3, 18, 23, 59, 59)
-        result = await esmo_client.get_examsessions(from_date, to_date)
+        result = await esmo_client.get_divisions()
+        converted_result = json.dumps(list(result.values()), default=str)
+        return HttpResponse(converted_result, content_type="application/json")
+
+
+class ExamsTableView(View):
+    @csrf_exempt
+    async def get(self, request: HttpRequest):
+        date = request.GET.get('date', '')
+        time = request.GET.get('time', '')
+        interval = request.GET.get('interval', '')
+        div = request.GET.get('div', '')
+        user = await sync_to_async(auth.get_user)(request)
+        username = user.username
+        result = await esmo_client.get_examsessions(username, date, time, interval, div)
         converted_result = json.dumps(result, default=str)
         return HttpResponse(converted_result, content_type="application/json")
+
+
+class ExamsEmptyView(View):
+    @csrf_exempt
+    async def get(self, request: HttpRequest):
+        example_result = []
+        return HttpResponse(json.dumps(example_result), content_type="application/json")
+
+
+class ExamsFileView(View):
+    @csrf_exempt
+    async def get(self, request: HttpRequest):
+        user = await sync_to_async(auth.get_user)(request)
+        username = user.username
+        date, time, interval, div = extract_query_params_from_cache_key(username)
+        result = await esmo_client.get_examsessions(username, date, time, interval, div)
+        div_name = await get_div_name(div)
+        wb = await get_book(result)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = (
+            'attachment; filename="{div}_{date}_{time}_{interval}.xlsx"'
+            .format(date=date, time=time, interval=interval, div=div_name)
+        )
+        wb.save(response)
+        return response

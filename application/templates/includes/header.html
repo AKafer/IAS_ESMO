@@ -1,0 +1,40 @@
+{% load static %}
+<nav class="navbar navbar-light bg-light">
+    <meta name="csrf_token" content="{{ csrf_token }}">
+    {% csrf_token %}
+    <div class="container-fluid" style="background-color: #19a2a2">
+      <div class="card" style="margin: 10px;">
+        <a  href="{% url 'api:index' %}">
+            <img src="{% static 'images/ias_control_logo.png' %}" alt="IAS" width="100%" height="100%" >
+        </a>
+      </div>
+        {% if user.is_authenticated %}
+        <div class="card border-info">
+          <div class="card-body " style="background-color: #19a2a2">
+            <span>
+              <strong style="color:white;">
+                  Дата: {% now 'd.m.Y' %}
+                  <div class="vr"></div>
+                  {% if user.username %}
+                  Пользователь: {{ user.username }}
+                  {% else %}
+                  Пользователь: Гость
+                  {% endif %}
+              </strong>
+          </span>
+          </div>
+        </div>
+        {% endif %}
+        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+            {% if user.is_authenticated %}
+            {% csrf_token %}
+            <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-sm" type="submit" id="ExitSystemButton">Выйти из системы</button>
+                </form>
+            {% else %}
+                <a type="button" class="btn btn-primary btn-sm" href="{% url 'users:login' %}">Войти в систему</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="{% static 'images/favicon_.ico' %}"
+    />
+    <!-- Script для bootstrap5 -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <!-- Название вкладки -->
+    <title>ESMO</title>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <script src="{% static '1.12.1/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static '1.12.1/js/dataTables.bootstrap5.min.js' %}"></script>
+    <link
+      href="{% static '1.12.1/css/dataTables.bootstrap5.min.css' %}"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <!-- Styles select 2 -->
+    <link
+      href="{% static 'npm/select2@4.1.0-rc.0/dist_/css/select2.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'npm/select2-bootstrap-5-theme@1.3.0/dist_/select2-bootstrap-5-theme.min.css' %}"
+      rel="stylesheet"
+    />
+    <!-- Scripts select 2 -->
+    <script src="{% static 'npm/select2@4.1.0-rc.0/dist_/js/select2.min.js' %}"></script>
+
+    <!-- Axios для браузера, работа с XMLHttpRequests -->
+    <script src="{% static 'npm/axios/dist_/axios.min.js' %}"></script>
+
+    {% include 'includes/header.html' %}
+    <!-- multi-select -->
+    <link href="{% static 'multi_select/jquery.multiselect.css' %}" rel="stylesheet" />
+    <script src="{% static 'multi_select/jquery.multiselect.js' %}"></script>
+  </head>
+  <body>
+    <main>
+      <div class="container-fluid bg-light">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+    {% include 'includes/footer.html' %}
+    {% csrf_token %}
+    <script src="{% static 'js/index.js' %}"></script>
+  </body>
+</html>
