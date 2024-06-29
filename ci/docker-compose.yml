@@ -1,0 +1,60 @@
+version: '3.9'
+services:
+
+  db:
+    container_name: esmo_db
+    image: postgres:14-bullseye
+    restart: on-failure
+    volumes:
+      - postgres_data_esmo:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  redis:
+    container_name: esmo_redis
+    image: redis:latest
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  app:
+    container_name: esmo_app
+    build:
+      context: ..
+      dockerfile: ci/Dockerfile
+    restart: always
+    volumes:
+      - static_value_esmo:/app/static/
+      - media_value_esmo:/app/media/
+    depends_on:
+      db:
+          condition: service_healthy
+      redis:
+          condition: service_healthy
+
+    env_file:
+      - ./.env
+    command: gunicorn application.wsgi:application --bind 0.0.0.0:8000
+
+  nginx:
+    container_name: esmo_nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_value_esmo:/var/html/static/
+      - media_value_esmo:/var/html/media/
+    depends_on:
+      - app
+
+volumes:
+  static_value_esmo:
+  media_value_esmo:
+  postgres_data_esmo:

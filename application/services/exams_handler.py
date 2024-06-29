@@ -16,7 +16,7 @@ def get_time(diff: timedelta) -> str:
 
 
 def get_empl_dict(employees: list[dict]) -> dict:
-    return {empl["uuid"]: empl for empl in employees}
+    return {empl["uuid"]: empl for empl in employees if empl.get("uuid")}
 
 
 def get_div_dict(divisions: list[dict]) -> dict:

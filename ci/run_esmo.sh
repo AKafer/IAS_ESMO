@@ -5,7 +5,7 @@
 function run_esmo {
     clear
     echo -en "\033[37;1;41m Останавливаем контейнеры. \033[0m\n"
-    docker-compose down -v
+    docker-compose down
     echo -en "\033[37;1;41m Собираем контейнеры. \033[0m\n"
     docker-compose up -d --build
     echo -en "\033[37;1;41m Применяем миграции. \033[0m\n"
