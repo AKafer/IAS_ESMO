@@ -28,6 +28,14 @@ class IndexView(View):
         return render(request, 'esmo/index.html')
 
 
+class EmplView(View):
+    @csrf_exempt
+    async def get(self, request: HttpRequest):
+        result = await esmo_client.get_incorrect_employees()
+        converted_result = json.dumps(result, default=str)
+        return HttpResponse(converted_result, content_type="application/json")
+
+
 class DivsView(View):
     @csrf_exempt
     async def get(self, request: HttpRequest):

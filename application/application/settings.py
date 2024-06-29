@@ -105,11 +105,13 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.mydomain.com',
     'https://*.127.0.0.1',
     'http://0.0.0.0',
+    'http://0.0.0.0:8000',
     'http://localhost',
     'http://80.87.200.48',
     'https://appname.herokuapp.com',
     'http://tests-monitor.sytes.net',
     'https://tests-monitor.sytes.net'
+    '*'
 ]
 
 # Static files (CSS, JavaScript, Images)
@@ -142,8 +144,8 @@ CACHES = {
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'api:index'
 
-EXAM_TTL = 60 * 60  # 2 hour
-EMPL_TTL = 60 * 60  # 2 hour
+EXAM_TTL = 60 * 60  # 1 hour
+EMPL_TTL = 60 * 60  # 1 hour
 
 ALLOWED_RETRIES = 3
 BACKOFF_SECONDS = 0.2

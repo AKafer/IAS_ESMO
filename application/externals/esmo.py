@@ -32,6 +32,20 @@ class EsmoApiClient(BaseApiClient):
             results.extend(next_results)
         return results
 
+    async def get_incorrect_employees(self):
+        cache_key = f"incorrect_employees"
+        employee_dict = cache.get(cache_key)
+        if not employee_dict:
+            endpoint = f"/exchange/employees/?per_page={settings.ROWS_PER_PAGE}"
+            result = await self._fetch_paginated(endpoint, 1)
+            empty_uuid_empls = []
+            for empl in result:
+                if not empl.get("uuid"):
+                    empty_uuid_empls.append(empl)
+            employee_dict = get_empl_dict(result)
+            cache.set(cache_key, employee_dict, settings.EMPL_TTL)
+        return employee_dict
+
     async def get_employees(self):
         cache_key = f"employees"
         employee_dict = cache.get(cache_key)
