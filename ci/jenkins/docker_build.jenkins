@@ -38,7 +38,7 @@ pipeline {
                 sh '''
                 docker push akafer/esmo_app
                 docker rmi akafer/esmo_app
-                ocker push akafer/esmo_nginx
+                docker push akafer/esmo_nginx
                 docker rmi akafer/esmo_nginx
                 '''
             }
