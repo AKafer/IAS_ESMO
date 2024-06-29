@@ -26,8 +26,8 @@ pipeline {
                 echo " ============== start building image =================="
                 dir ('.') {
                 	sh '''
-                	docker build -t akafer/esmo_app -f  ./ci/Dockerfile .
                 	docker build -t akafer/esmo_nginx -f  ./ci/nginx/Dockerfile .
+                	docker build -t akafer/esmo_app -f  ./ci/Dockerfile .
                 	'''
                 }
             }
