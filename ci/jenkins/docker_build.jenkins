@@ -58,33 +58,19 @@ pipeline {
         stage("renew server") {
             steps {
                 echo " ============== renew server =================="
-                sh 'ssh root@ub1 "
-                cd /root/app/IAS_ESMO_NEW
-                && docker-compose down -v
-                && docker rmi akafer/esmo_app
-                && docker rmi akafer/esmo_nginx
-                && docker-compose up -d
-                "'
+                sh 'ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && docker-compose down -v && docker rmi akafer/esmo_app && docker rmi akafer/esmo_nginx && docker-compose up -d"'
             }
         }
         stage("migration&collectstatic") {
             steps {
                 echo " ============== migration&collectstatic =================="
-                sh 'ssh root@ub1 "
-                    cd /root/app/IAS_ESMO_NEW
-                    && docker exec esmo_app python manage.py migrate --noinput
-                    && docker exec esmo_app python manage.py collectstatic --no-input
-                    "'
+                sh 'ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && docker exec esmo_app python manage.py migrate --noinput && docker exec esmo_app python manage.py collectstatic --no-input"'
             }
         }
         stage("createsuperuser") {
             steps {
                 echo " ============== createsuperuser =================="
-                sh 'ssh root@ub1 "
-                    cd /root/app/IAS_ESMO_NEW
-                    && while read LINE; do export "$LINE"; done < ./.env
-                    && ./createsuperuser.sh
-                    "'
+                sh 'ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && while read LINE; do export "$LINE"; done < ./.env && ./createsuperuser.sh"'
             }
         }
     }
