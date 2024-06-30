@@ -65,5 +65,11 @@ pipeline {
                 sh 'ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && docker exec esmo_app python manage.py migrate --noinput && docker exec esmo_app python manage.py collectstatic --no-input"'
             }
         }
+        stage("createsuperuser") {
+            steps {
+                echo " ============== createsuperuser =================="
+                sh 'ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && while read LINE; do export "$LINE"; done < ./.env && ./createsuperuser.sh"'
+            }
+        }
     }
 }

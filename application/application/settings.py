@@ -111,7 +111,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://appname.herokuapp.com',
     'http://tests-monitor.sytes.net',
     'https://tests-monitor.sytes.net'
-    '*'
 ]
 
 # Static files (CSS, JavaScript, Images)
