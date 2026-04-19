@@ -68,7 +68,7 @@ pipeline {
         stage("createsuperuser") {
             steps {
                 echo " ============== createsuperuser =================="
-                sh 'ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && while read LINE; do export "$LINE"; done < ./.env && ./createsuperuser.sh"'
+                sh '''ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && set -a && . ./.env && set +a && ./createsuperuser.sh"'''
             }
         }
     }

@@ -1,27 +1,11 @@
-#!/usr/bin/expect -f
+#!/bin/bash
 
-set timeout 1
-
-set ADMIN_LOGIN $::env(ADMIN_LOGIN)
-set ADMIN_EMAIL $::env(ADMIN_EMAIL)
-set ADMIN_PASSWORD $::env(ADMIN_PASSWORD)
-
-spawn docker exec -it esmo_app python manage.py createsuperuser
-
-expect "Username (leave blank to use 'root'):\r"
-
-send "$ADMIN_LOGIN\r"
-
-expect "Email address:\r"
-
-send "$ADMIN_EMAIL\r"
-
-expect "Password:\r"
-
-send "$ADMIN_PASSWORD\r"
-
-expect "Password (again):\r"
-
-send "$ADMIN_PASSWORD\r"
-
-expect eof
+docker exec esmo_app python manage.py shell -c "
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(username='${ADMIN_LOGIN}').exists():
+    User.objects.create_superuser('${ADMIN_LOGIN}', '${ADMIN_EMAIL}', '${ADMIN_PASSWORD}')
+    print('Superuser created.')
+else:
+    print('Superuser already exists, skipping.')
+"
