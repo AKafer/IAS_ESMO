@@ -6,7 +6,7 @@ services:
     image: postgres:14-bullseye
     restart: on-failure
     volumes:
-      - media_value_esmo:/var/lib/postgresql/data/
+      - postgres_data_esmo:/var/lib/postgresql/data/
     env_file:
       - ./.env
     healthcheck:

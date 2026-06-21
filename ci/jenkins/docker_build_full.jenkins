@@ -71,5 +71,11 @@ pipeline {
                 sh '''ssh root@ub1 "cd /root/app/IAS_ESMO_NEW && set -a && . ./.env && set +a && ./createsuperuser.sh"'''
             }
         }
+        stage("cleanup old docker images") {
+            steps {
+                echo " ============== cleanup old docker images =================="
+                sh '''ssh root@ub1 "docker image prune -a -f --filter 'until=72h'"'''
+            }
+        }
     }
 }
