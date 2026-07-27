@@ -4,7 +4,7 @@ services:
   db:
     container_name: esmo_db
     image: postgres:14-bullseye
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - postgres_data_esmo:/var/lib/postgresql/data/
     env_file:
@@ -18,14 +18,14 @@ services:
   redis:
     container_name: esmo_redis
     image: redis:latest
-    restart: on-failure
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
   app:
     container_name: esmo_app
     image: akafer/esmo_app
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - static_value_esmo:/app/static/
       - media_value_esmo:/app/media/

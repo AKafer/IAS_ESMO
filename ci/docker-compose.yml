@@ -4,7 +4,7 @@ services:
   db:
     container_name: esmo_db
     image: postgres:14-bullseye
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - postgres_data_esmo:/var/lib/postgresql/data/
     env_file:
