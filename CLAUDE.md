@@ -73,8 +73,14 @@ All secrets and environment-specific values come from `ci/.env`:
 
 | Variable | Purpose |
 |---|---|
-| `TOKEN` | JWT bearer token for the external ESMO API |
+| `TOKEN` | Static JWT bearer token — fallback used only when no OAuth credentials are set |
 | `ESMO_API_BASE_URL` | Base URL of the external ESMO API (default `https://profaudit.kvzrm.ru/api/v1/`) |
+| `ESMO_OAUTH_TOKEN_URL` | Laravel Passport token endpoint (site root, not under `/api/v1/`) |
+| `ESMO_GRANT_TYPE` | OAuth grant type, default `password` |
+| `ESMO_CLIENT_ID` / `ESMO_CLIENT_SECRET` | Passport client credentials |
+| `ESMO_USERNAME` / `ESMO_PASSWORD` | User credentials for the `password` grant |
+| `ESMO_TZ_OFFSET` | `X-TZ-Offset` header sent to the token endpoint, default `3` |
+| `ESMO_TOKEN_LEEWAY` | Renew the access token this many seconds early, default 86400 |
 | `SECRET_KEY` | Django secret key |
 | `DEBUG` | Django debug mode |
 | `POSTGRES_*` / `DB_*` | Database connection |

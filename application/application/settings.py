@@ -155,6 +155,18 @@ ROWS_PER_PAGE = 200
 TOKEN = os.getenv('TOKEN', default='')
 ESMO_API_BASE_URL = os.getenv('ESMO_API_BASE_URL', default='https://profaudit.kvzrm.ru/api/v1/')
 
+# OAuth (Laravel Passport) credentials for the external ESMO API.
+# The token endpoint lives at the site root, not under /api/v1/.
+ESMO_OAUTH_TOKEN_URL = os.getenv('ESMO_OAUTH_TOKEN_URL', default='https://massiv.npk-itmed.ru/oauth/token')
+ESMO_GRANT_TYPE = os.getenv('ESMO_GRANT_TYPE', default='password')
+ESMO_CLIENT_ID = os.getenv('ESMO_CLIENT_ID', default='')
+ESMO_CLIENT_SECRET = os.getenv('ESMO_CLIENT_SECRET', default='')
+ESMO_USERNAME = os.getenv('ESMO_USERNAME', default='')
+ESMO_PASSWORD = os.getenv('ESMO_PASSWORD', default='')
+ESMO_TZ_OFFSET = os.getenv('ESMO_TZ_OFFSET', default='3')
+# Renew the access token this long before it actually expires (seconds).
+ESMO_TOKEN_LEEWAY = int(os.getenv('ESMO_TOKEN_LEEWAY', default=60 * 60 * 24))
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

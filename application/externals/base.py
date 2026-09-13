@@ -10,6 +10,14 @@ from failsafe import Failsafe, RetryPolicy, Delay, FailsafeError
 logger = logging.getLogger("esmo")
 
 
+class ApiResponseError(httpx.RequestError):
+    """An error response (>= 400) returned by an upstream API."""
+
+    def __init__(self, message: str, status_code: int):
+        super().__init__(message)
+        self.status_code = status_code
+
+
 class BaseApiClient:
     allowed_retries: int = settings.ALLOWED_RETRIES
     backoff_seconds: float = settings.BACKOFF_SECONDS
@@ -101,7 +109,7 @@ class BaseApiClient:
                 f"{response.status_code} {side} Error: {reason} for url: {response.url}"
             )
             logger.error(error_message)
-            raise httpx.RequestError(error_message)
+            raise ApiResponseError(error_message, response.status_code)
 
         if not response.text:
             return None

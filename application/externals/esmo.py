@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
 
@@ -6,8 +7,11 @@ from django.core.cache import cache
 from lazy_object_proxy import Proxy
 
 from services.exams_handler import exam_handler, get_empl_dict, get_div_dict
-from externals.base import BaseApiClient
+from externals.base import BaseApiClient, ApiResponseError
+from externals.auth import get_access_token
 
+
+logger = logging.getLogger("esmo")
 
 USER_LAST_EXAM_CACHE_KEY = "{username}_last_exam_cache_key"
 
@@ -15,15 +19,30 @@ USER_LAST_EXAM_CACHE_KEY = "{username}_last_exam_cache_key"
 class EsmoApiClient(BaseApiClient):
     max_interval = 48
     base_url = settings.ESMO_API_BASE_URL
-    HEADERS = {
-        'Authorization': f'Bearer {settings.TOKEN}',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    }
+
+    @staticmethod
+    def _headers(token: str) -> dict:
+        return {
+            'Authorization': f'Bearer {token}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+
+    async def _authorized_get(self, url: str):
+        """GET with a bearer token, retrying once with a fresh one on 401/403."""
+        token = await get_access_token()
+        try:
+            return await self.get(url, headers=self._headers(token))
+        except ApiResponseError as err:
+            if err.status_code not in (401, 403):
+                raise
+            logger.info("ESMO API rejected the access token, requesting a new one")
+            token = await get_access_token(force_new=True)
+            return await self.get(url, headers=self._headers(token))
 
     async def _fetch_paginated(self, endpoint: str, page) -> list:
         url = urljoin(self.base_url, f"{endpoint}&page={page}".lstrip("/"))
-        response = await self.get(url, headers=self.HEADERS)
+        response = await self._authorized_get(url)
         results = response.get("data", [])
 
         if response.get("next_page_url"):
