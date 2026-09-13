@@ -153,6 +153,7 @@ BACKOFF_SECONDS = 0.2
 ROWS_PER_PAGE = 200
 
 TOKEN = os.getenv('TOKEN', default='')
+ESMO_API_BASE_URL = os.getenv('ESMO_API_BASE_URL', default='https://profaudit.kvzrm.ru/api/v1/')
 
 LOGGING = {
     'version': 1,

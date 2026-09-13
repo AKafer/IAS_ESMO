@@ -74,6 +74,7 @@ All secrets and environment-specific values come from `ci/.env`:
 | Variable | Purpose |
 |---|---|
 | `TOKEN` | JWT bearer token for the external ESMO API |
+| `ESMO_API_BASE_URL` | Base URL of the external ESMO API (default `https://profaudit.kvzrm.ru/api/v1/`) |
 | `SECRET_KEY` | Django secret key |
 | `DEBUG` | Django debug mode |
 | `POSTGRES_*` / `DB_*` | Database connection |

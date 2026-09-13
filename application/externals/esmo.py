@@ -14,7 +14,7 @@ USER_LAST_EXAM_CACHE_KEY = "{username}_last_exam_cache_key"
 
 class EsmoApiClient(BaseApiClient):
     max_interval = 48
-    base_url = 'https://profaudit.kvzrm.ru/api/v1/'
+    base_url = settings.ESMO_API_BASE_URL
     HEADERS = {
         'Authorization': f'Bearer {settings.TOKEN}',
         'Content-Type': 'application/json',
